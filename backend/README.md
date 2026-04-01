@@ -153,4 +153,4 @@ Response
 * Gunakan DTO untuk validasi request
 * Gunakan authentication guard untuk endpoint yang membutuhkan proteksi
 * Semua response sebaiknya konsisten menggunakan format yang sama
-* Pisahkan module berdasarkan domain (auth, user, course, dll)
+* Pisahkan module berdasarkan domain (auth, user, dll)
