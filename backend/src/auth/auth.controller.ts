@@ -2,6 +2,10 @@ import { Controller, Post, Body, Get, HttpCode } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { RegisterAuthDto } from './dto/register-auth.dto.js';
 import { LoginAuthDto } from './dto/login-auth.dto.js';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard.js';
+import { RolesGuard } from './guards/roles/roles.guard.js';
+import { Roles } from './decorators/roles.decorator.js';
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +24,8 @@ export class AuthController {
   }
 
   @Get('users')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   findAllUsers() {
     return this.authService.findAllUsers();
   }
