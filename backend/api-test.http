@@ -1,0 +1,37 @@
+@URL = http://localhost:3001
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZmVyZGlAZXhhbXBsZS50ZXN0Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzUzOTU0OTcsImV4cCI6MTc3NTQ4MTg5N30.06s-s8ecqb4MSQiFPkloIVUdNKOw_059yk2m_74xAdQ
+
+### Register
+POST {{URL}}/auth/register
+Content-Type: application/json
+
+{
+    "name": "Ferdi",
+    "username": "Ferr_McCartneyy",
+    "email": "ferdi@example.test",
+    "password": "password*123"
+}
+
+### Login
+POST {{URL}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "ferdi@example.test",
+    "password": "password*123"
+}
+
+### User
+### me
+GET {{URL}}/users/me
+Authorization: Bearer {{token}}
+
+### Update User
+PATCH {{URL}}/users/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "bio": "Halo selamat datang di profile saya"
+}
