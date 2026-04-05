@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
 import "../globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const interHeading = Inter({ subsets: ["latin"], variable: "--font-heading" });
 
@@ -43,7 +44,10 @@ export default function RootLayout({
         interHeading.variable,
       )}
     >
-      <body className="min-h-full bg-gray-100 flex flex-col">{children}</body>
+      <body className="min-h-full bg-gray-100 flex flex-col">
+        {children}
+        <Toaster position="top-right" richColors />
+      </body>
     </html>
   );
 }
