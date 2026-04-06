@@ -47,3 +47,8 @@ export type Like = Prisma.LikeModel
  * 
  */
 export type Follow = Prisma.FollowModel
+/**
+ * Model RefreshToken
+ * 
+ */
+export type RefreshToken = Prisma.RefreshTokenModel

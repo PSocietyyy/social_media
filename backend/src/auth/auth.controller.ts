@@ -1,8 +1,7 @@
-import { Controller, Post, Body, Get, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, Get, HttpCode, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { RegisterAuthDto } from './dto/register-auth.dto.js';
 import { LoginAuthDto } from './dto/login-auth.dto.js';
-import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard.js';
 import { RolesGuard } from './guards/roles/roles.guard.js';
 import { Roles } from './decorators/roles.decorator.js';
@@ -21,6 +20,19 @@ export class AuthController {
   @HttpCode(201)
   register(@Body() body: RegisterAuthDto) {
     return this.authService.register(body);
+  }
+
+  @Post('refresh')
+  @HttpCode(200)
+  refresh(@Body('refresh_token') token: string) {
+    return this.authService.refresh(token);
+  }
+
+  @Post('logout')
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  logout(@Body('refresh_token') token: string) {
+    return this.authService.logout(token);
   }
 
   @Get('users')
