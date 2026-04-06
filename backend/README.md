@@ -46,35 +46,6 @@ Authorization: Bearer <access_token>
 
 ## Auth
 
-### Login
-
-```
-POST /auth/login
-```
-
-Request Body
-
-```json
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-```
-
-Response
-
-```json
-{
-  "status": "success",
-  "message": "Login successful",
-  "data": {
-    "access_token": "your_jwt_token"
-  }
-}
-```
-
----
-
 ### Register
 
 ```
@@ -92,7 +63,7 @@ Request Body
 }
 ```
 
-Response
+Response `201`
 
 ```json
 {
@@ -110,6 +81,123 @@ Response
 
 ---
 
+### Login
+
+```
+POST /auth/login
+```
+
+Request Body
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+Response `200`
+
+```json
+{
+  "status": "success",
+  "message": "Login successful",
+  "data": {
+    "access_token": "eyJhbGci...",
+    "refresh_token": "eyJhbGci..."
+  }
+}
+```
+
+> `access_token` berlaku selama **15 menit**.  
+> `refresh_token` berlaku selama **7 hari** dan disimpan di database.
+
+---
+
+### Refresh Token
+
+```
+POST /auth/refresh
+```
+
+Gunakan endpoint ini untuk mendapatkan `access_token` baru tanpa login ulang.
+
+Request Body
+
+```json
+{
+  "refresh_token": "eyJhbGci..."
+}
+```
+
+Response `200`
+
+```json
+{
+  "status": "success",
+  "message": "Token refreshed",
+  "data": {
+    "access_token": "eyJhbGci...",
+    "refresh_token": "eyJhbGci..."
+  }
+}
+```
+
+> **Rotasi aktif** — setiap kali refresh, token lama dihapus dari DB dan token baru digenerate.  
+> Selalu simpan `refresh_token` terbaru dari response ini.
+
+Error Response
+
+```json
+{
+  "status": "error",
+  "message": "Refresh token tidak valid"
+}
+```
+
+```json
+{
+  "status": "error",
+  "message": "Refresh token sudah expired"
+}
+```
+
+---
+
+### Logout
+
+```
+POST /auth/logout
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+Request Body
+
+```json
+{
+  "refresh_token": "eyJhbGci..."
+}
+```
+
+Response `200`
+
+```json
+{
+  "status": "success",
+  "message": "Logout berhasil"
+}
+```
+
+> `refresh_token` dihapus dari database.  
+> `access_token` akan expired sendiri setelah 15 menit.
+
+---
+
 ### Get All Users (Admin Only)
 
 ```
@@ -122,7 +210,7 @@ Headers
 Authorization: Bearer <access_token>
 ```
 
-Response
+Response `200`
 
 ```json
 {
@@ -154,7 +242,7 @@ Headers
 Authorization: Bearer <access_token>
 ```
 
-Response
+Response `200`
 
 ```json
 {
@@ -188,7 +276,7 @@ Headers
 Authorization: Bearer <access_token>
 ```
 
-Response
+Response `200`
 
 ```json
 {
@@ -233,7 +321,7 @@ Request Body
 }
 ```
 
-Response
+Response `200`
 
 ```json
 {
@@ -265,7 +353,7 @@ Headers
 Authorization: Bearer <access_token>
 ```
 
-Response
+Response `200`
 
 ```json
 {
@@ -303,7 +391,7 @@ Rules
 - User hanya bisa update dirinya sendiri
 - Admin bisa update semua user
 
-Response
+Response `200`
 
 ```json
 {
@@ -340,13 +428,29 @@ Rules
 - User hanya bisa delete dirinya sendiri
 - Admin bisa delete semua user
 
-Response
+Response `200`
 
 ```json
 {
   "status": "success",
   "message": "User deleted"
 }
+```
+
+---
+
+## Token Flow
+
+```
+POST /auth/login
+→ { access_token (15m), refresh_token (7d) }
+
+POST /auth/refresh   { refresh_token }
+→ { access_token baru, refresh_token baru }  ← rotasi!
+
+POST /auth/logout    Bearer + { refresh_token }
+→ refresh_token dihapus dari DB
+  access_token mati sendiri setelah 15m
 ```
 
 ---
@@ -374,3 +478,4 @@ Response
 - Password otomatis di-hash oleh server
 - Gunakan `/users/me` untuk kebutuhan frontend
 - Pisahkan module berdasarkan domain (auth, users, dll)
+- Selalu perbarui `refresh_token` setiap kali hit `/auth/refresh` karena rotasi aktif
