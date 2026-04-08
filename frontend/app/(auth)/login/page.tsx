@@ -85,7 +85,9 @@ const LoginPage = () => {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
               </CardDescription>
               <CardAction>
-                <Button>Register</Button>
+                <Button onClick={() => router.push("/register")}>
+                  Register
+                </Button>
               </CardAction>
             </CardHeader>
             <CardContent>
