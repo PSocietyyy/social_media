@@ -9,7 +9,7 @@ const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-white shadow-md">
+    <nav className="w-full bg-white shadow-md z-10">
       <div className="container mx-auto">
         <div className="flex items-center justify-between p-4 gap-2">
           {/* Logo */}

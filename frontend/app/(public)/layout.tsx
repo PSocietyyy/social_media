@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
 import "../globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
+import SidebarPublic from "@/components/SidebarPublic";
 
 const interHeading = Inter({ subsets: ["latin"], variable: "--font-heading" });
 
@@ -44,9 +45,12 @@ export default function RootLayout({
         interHeading.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-screen flex flex-col bg-gray-100">
         <Navbar />
-        {children}
+        <div className="w-full flex h-[calc(100dvh-76px)]">
+          <SidebarPublic />
+          <div className="w-full h-full">{children}</div>
+        </div>
       </body>
     </html>
   );

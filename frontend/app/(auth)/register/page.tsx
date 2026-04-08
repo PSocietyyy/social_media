@@ -78,8 +78,11 @@ const RegisterPage = () => {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
               </CardDescription>
               <CardAction>
-                <Button asChild variant="outline">
-                  <Link href="/login">Login</Link>
+                <Button
+                  variant={"outline"}
+                  onClick={() => router.push("/login")}
+                >
+                  Login
                 </Button>
               </CardAction>
             </CardHeader>
