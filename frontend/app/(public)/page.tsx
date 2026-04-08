@@ -1,3 +1,9 @@
+import PostFormPublic from "@/components/PostFormPublic";
+
 export default function Home() {
-  return <div>Hello World</div>;
+  return (
+    <div className="w-full">
+      <PostFormPublic />
+    </div>
+  );
 }

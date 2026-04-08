@@ -26,7 +26,7 @@ const SidebarPublic = () => {
     },
   ];
   return (
-    <aside className="max-w-96 w-full bg-white h-full fixed p-4">
+    <aside className="max-w-96 w-full bg-white h-full p-4">
       {/* Profile */}
       <div className="w-full p-2 space-y-4">
         <div className="flex items-center gap-2">
@@ -57,6 +57,7 @@ const SidebarPublic = () => {
       <div className="w-full flex flex-col gap-2 p-2">
         {links.map((link, index) => (
           <Link
+            key={index}
             href={link.href}
             className={`w-full px-3 py-2 rounded-l-md group hover:border-r-2 hover:border-orange-500 ${
               pathname === link.href && "border-r-2 border-orange-500"
