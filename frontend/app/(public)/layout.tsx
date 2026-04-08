@@ -47,9 +47,9 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col bg-gray-100">
         <Navbar />
-        <div className="w-full flex h-[calc(100dvh-76px)]">
+        <div className="w-full flex h-[calc(100dvh-76px)] gap-2">
           <SidebarPublic />
-          <div className="w-full h-full">{children}</div>
+          <div className="w-full h-full flex-1 p-2">{children}</div>
         </div>
       </body>
     </html>
