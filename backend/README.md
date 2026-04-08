@@ -455,6 +455,10 @@ POST /auth/logout    Bearer + { refresh_token }
 
 ---
 
+# Post
+
+---
+
 ## Status Codes
 
 | Code | Description           |

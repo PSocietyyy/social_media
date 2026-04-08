@@ -74,3 +74,13 @@ export type Follow = Prisma.FollowModel
  * 
  */
 export type RefreshToken = Prisma.RefreshTokenModel
+/**
+ * Model PostHashtag
+ * 
+ */
+export type PostHashtag = Prisma.PostHashtagModel
+/**
+ * Model Hashtag
+ * 
+ */
+export type Hashtag = Prisma.HashtagModel

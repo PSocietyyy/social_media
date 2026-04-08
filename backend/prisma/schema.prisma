@@ -38,13 +38,13 @@ model User {
   comments Comment[]
   likes    Like[]
 
-  followers     Follow[]       @relation("followers")
-  following     Follow[]       @relation("following")
+  followers Follow[] @relation("followers")
+  following Follow[] @relation("following")
 
   refreshTokens RefreshToken[]
-  
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Post {
@@ -56,6 +56,8 @@ model Post {
   media    Media[]
   comments Comment[]
   likes    Like[]
+
+  hashtags PostHashtag[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -69,7 +71,7 @@ model Media {
   type   MediaType
   postId Int
 
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
@@ -81,7 +83,7 @@ model Comment {
   postId   Int
 
   author User @relation(fields: [authorId], references: [id])
-  post   Post @relation(fields: [postId], references: [id])
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -95,7 +97,7 @@ model Like {
   postId Int
 
   user User @relation(fields: [userId], references: [id])
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -121,5 +123,26 @@ model RefreshToken {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model PostHashtag {
+  id        Int @id @default(autoincrement())
+  postId    Int
+  hashtagId Int
+
+  post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  hashtag Hashtag @relation(fields: [hashtagId], references: [id])
+
+  @@unique([postId, hashtagId])
+  @@index([hashtagId])
+}
+
+model Hashtag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  posts PostHashtag[]
+
   createdAt DateTime @default(now())
 }
