@@ -455,14 +455,388 @@ POST /auth/logout    Bearer + { refresh_token }
 
 ---
 
-# Post
+## Posts
+
+### Create Post
+
+```
+POST /posts
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+Request Body
+
+```json
+{
+  "content": "Hello world!",
+  "media": [
+    {
+      "url": "https://example.com/image.jpg",
+      "type": "IMAGE"
+    }
+  ],
+  "hashtags": ["nestjs", "typescript"]
+}
+```
+
+> `content` dan `media` bersifat opsional, tapi **minimal salah satu harus diisi**.  
+> `type` pada media hanya menerima nilai `IMAGE` atau `VIDEO`.  
+> `hashtags` akan disimpan dalam lowercase secara otomatis.
+
+Response `201`
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "content": "Hello world!",
+    "authorId": 3,
+    "author": {
+      "id": 3,
+      "name": "John Doe",
+      "username": "john",
+      "avatar": null
+    },
+    "media": [
+      {
+        "id": 1,
+        "url": "https://example.com/image.jpg",
+        "type": "IMAGE",
+        "postId": 1,
+        "createdAt": "2026-01-01T00:00:00.000Z"
+      }
+    ],
+    "hashtags": [
+      {
+        "id": 1,
+        "postId": 1,
+        "hashtagId": 1,
+        "hashtag": {
+          "id": 1,
+          "name": "nestjs",
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      }
+    ],
+    "_count": {
+      "likes": 0,
+      "comments": 0
+    },
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  }
+}
+```
+
+Error Response — konten kosong
+
+```json
+{
+  "message": "Post must have content or media"
+}
+```
+
+---
+
+### Get All Posts
+
+```
+GET /posts
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+Query Parameters
+
+| Parameter | Type    | Default | Description             |
+| --------- | ------- | ------- | ----------------------- |
+| `page`    | integer | `1`     | Halaman yang diambil    |
+| `limit`   | integer | `10`    | Jumlah post per halaman |
+
+Contoh Request
+
+```
+GET /posts?page=1&limit=5
+```
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": [
+    {
+      "id": 2,
+      "content": "Post terbaru",
+      "authorId": 3,
+      "author": {
+        "id": 3,
+        "name": "John Doe",
+        "username": "john",
+        "avatar": null
+      },
+      "media": [],
+      "hashtags": [],
+      "_count": {
+        "likes": 5,
+        "comments": 2
+      },
+      "createdAt": "2026-01-02T00:00:00.000Z",
+      "updatedAt": "2026-01-02T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+> ⚠️ **Bug**: Data `meta` pagination (`total`, `page`, `limit`, `totalPages`) **tidak muncul** di response karena interceptor hanya mengambil field `data` dari return service. Untuk fix, perlu penyesuaian di `PostService.findAll()`.  
+> Post diurutkan dari yang **terbaru** (`createdAt DESC`).
+
+---
+
+### Get Post by ID
+
+```
+GET /posts/:id
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "content": "Hello world!",
+    "authorId": 3,
+    "author": {
+      "id": 3,
+      "name": "John Doe",
+      "username": "john",
+      "avatar": null
+    },
+    "media": [
+      {
+        "id": 1,
+        "url": "https://example.com/image.jpg",
+        "type": "IMAGE",
+        "postId": 1,
+        "createdAt": "2026-01-01T00:00:00.000Z"
+      }
+    ],
+    "hashtags": [
+      {
+        "id": 1,
+        "postId": 1,
+        "hashtagId": 1,
+        "hashtag": {
+          "id": 1,
+          "name": "nestjs",
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      }
+    ],
+    "comments": [
+      {
+        "id": 5,
+        "content": "Keren banget!",
+        "authorId": 2,
+        "postId": 1,
+        "author": {
+          "id": 2,
+          "name": "Jane Doe",
+          "username": "jane",
+          "avatar": null
+        },
+        "createdAt": "2026-01-01T01:00:00.000Z",
+        "updatedAt": "2026-01-01T01:00:00.000Z"
+      }
+    ],
+    "_count": {
+      "likes": 5,
+      "comments": 1
+    },
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  }
+}
+```
+
+> Detail post menyertakan **10 komentar terbaru** (`createdAt DESC`).
+
+Error Response
+
+```json
+{
+  "message": "Post #1 not found"
+}
+```
+
+---
+
+### Update Post
+
+```
+PATCH /posts/:id
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+Request Body
+
+```json
+{
+  "content": "Updated content",
+  "media": [
+    {
+      "url": "https://example.com/new-image.jpg",
+      "type": "IMAGE"
+    }
+  ],
+  "hashtags": ["updated", "post"]
+}
+```
+
+> Semua field bersifat **opsional** — hanya kirim field yang ingin diubah.  
+> Jika `media` dikirim, **semua media lama akan diganti** dengan yang baru.  
+> Jika `hashtags` dikirim, **semua hashtag lama akan diganti** dengan yang baru.  
+> Hanya **pemilik post** yang bisa melakukan update.
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "content": "Updated content",
+    "authorId": 3,
+    "author": {
+      "id": 3,
+      "name": "John Doe",
+      "username": "john",
+      "avatar": null
+    },
+    "media": [
+      {
+        "id": 2,
+        "url": "https://example.com/new-image.jpg",
+        "type": "IMAGE",
+        "postId": 1,
+        "createdAt": "2026-01-01T02:00:00.000Z"
+      }
+    ],
+    "hashtags": [
+      {
+        "id": 2,
+        "postId": 1,
+        "hashtagId": 2,
+        "hashtag": {
+          "id": 2,
+          "name": "updated",
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      }
+    ],
+    "_count": {
+      "likes": 5,
+      "comments": 1
+    },
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T02:00:00.000Z"
+  }
+}
+```
+
+Error Response — bukan pemilik
+
+```json
+{
+  "message": "You can only update your own post"
+}
+```
+
+Error Response — tidak ditemukan
+
+```json
+{
+  "message": "Post #1 not found"
+}
+```
+
+---
+
+### Delete Post
+
+```
+DELETE /posts/:id
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+> Hanya **pemilik post** yang bisa menghapus.  
+> Menghapus post akan otomatis menghapus `media`, `comments`, `likes`, dan relasi `hashtags` (cascade).
+
+Response `200`
+
+```json
+{
+  "message": "Post #1 deleted successfully",
+  "data": {
+    "message": "Post #1 deleted successfully"
+  }
+}
+```
+
+> **Bug**: Field `data` berisi duplikat message karena interceptor mem-fallback ke seluruh object return service. Untuk fix, ubah return `remove()` di service menjadi `{ message: "...", data: null }`.
+
+Error Response — bukan pemilik
+
+```json
+{
+  "message": "You can only delete your own post"
+}
+```
+
+Error Response — tidak ditemukan
+
+```json
+{
+  "message": "Post #1 not found"
+}
+```
 
 ---
 
 ## Status Codes
 
 | Code | Description           |
-| ---- | --------------------- |
+| ------| -----------------------|
 | 200  | OK                    |
 | 201  | Created               |
 | 400  | Bad Request           |
@@ -483,3 +857,8 @@ POST /auth/logout    Bearer + { refresh_token }
 - Gunakan `/users/me` untuk kebutuhan frontend
 - Pisahkan module berdasarkan domain (auth, users, dll)
 - Selalu perbarui `refresh_token` setiap kali hit `/auth/refresh` karena rotasi aktif
+- `media` dan `hashtags` bersifat opsional saat create, tapi setidaknya `content` atau `media` harus ada
+- Update `media` / `hashtags` bersifat **replace**, bukan append
+- Hashtag disimpan lowercase secara otomatis oleh server
+- Pagination tersedia di `GET /posts` via query param `page` dan `limit`
+- Detail post (`GET /posts/:id`) menyertakan 10 komentar terbaru secara otomatis
