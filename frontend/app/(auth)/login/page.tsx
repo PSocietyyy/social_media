@@ -34,6 +34,7 @@ import {
 import { Eye, EyeClosed } from "lucide-react";
 import { toast } from "sonner";
 import { loginRequest } from "@/lib/api";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -51,11 +52,17 @@ const LoginPage = () => {
   const onSubmit = async (data: LoginSchema) => {
     try {
       const response = await loginRequest(data);
-      if (response && response.data && response.data.token) {
-        localStorage.setItem("token", response.data.token);
-      } else if (response && response.token) {
-        // Depending on actual response structure
-        localStorage.setItem("token", response.token);
+      if (response && response.data) {
+        if (response.data.access_token) {
+          Cookies.set("access_token", response.data.access_token, {
+            expires: 1 / 96,
+          }); // 15 minutes
+        }
+        if (response.data.refresh_token) {
+          Cookies.set("refresh_token", response.data.refresh_token, {
+            expires: 7,
+          }); // 7 days
+        }
       }
       toast.success("Login successful!");
       router.push("/");

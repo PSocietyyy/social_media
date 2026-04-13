@@ -5,7 +5,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { Button } from "./ui/button";
 import { useState } from "react";
 
-const Navbar = () => {
+const Navbar = ({ user }: { user?: any }) => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
@@ -55,13 +55,37 @@ const Navbar = () => {
               size="lg"
               className="hidden sm:inline-flex"
             >
-              <div className="w-7 h-7 rounded-full bg-gray-500" />
+              <div className="w-7 h-7 rounded-full bg-gray-500 overflow-hidden shrink-0 flex items-center justify-center">
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : user ? (
+                  <span className="text-white text-xs font-semibold">
+                    {user.name.charAt(0)}
+                  </span>
+                ) : null}
+              </div>
               <ChevronDown />
             </Button>
 
             {/* Mobile avatar  */}
             <Button variant="outline" size="lg" className="sm:hidden px-2">
-              <div className="w-7 h-7 rounded-full bg-gray-500" />
+              <div className="w-7 h-7 rounded-full bg-gray-500 overflow-hidden shrink-0 flex items-center justify-center">
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : user ? (
+                  <span className="text-white text-xs font-semibold">
+                    {user.name.charAt(0)}
+                  </span>
+                ) : null}
+              </div>
             </Button>
           </div>
         </div>
