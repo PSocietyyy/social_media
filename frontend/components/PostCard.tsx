@@ -1,8 +1,19 @@
-import React from "react";
-import { MoreHorizontal, MessageSquare, ThumbsUp } from "lucide-react";
+"use client";
+import React, { useState } from "react";
+import {
+  MoreHorizontal,
+  MessageSquare,
+  ThumbsUp,
+  Trash2,
+  Edit2,
+} from "lucide-react";
 import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { deletePost } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 dayjs.extend(relativeTime);
 
@@ -43,17 +54,45 @@ export interface Post {
 interface PostCardProps {
   post: Post;
   isDetail?: boolean;
+  currentUser?: any;
 }
 
-export const PostCard = ({ post, isDetail = false }: PostCardProps) => {
+export const PostCard = ({
+  post,
+  isDetail = false,
+  currentUser,
+}: PostCardProps) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+
+  const isOwner = currentUser && currentUser.id === post.authorId;
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+    const token = Cookies.get("access_token");
+    if (!token) return;
+
+    try {
+      await deletePost(token, post.id);
+      toast.success("Post deleted successfully");
+      setMenuOpen(false);
+      router.refresh(); // Refresh feed
+      if (isDetail) {
+        router.push("/");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete post");
+    }
+  };
+
   return (
     <div
       className={`w-full bg-white ${isDetail ? "rounded-xl border shadow-sm p-4" : "rounded-xl border shadow-sm p-4"} mb-4`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 relative">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
             {post.author.avatar ? (
               <img
                 src={post.author.avatar}
@@ -73,13 +112,37 @@ export const PostCard = ({ post, isDetail = false }: PostCardProps) => {
             </span>
           </div>
         </div>
-        <button className="text-gray-500 hover:bg-gray-100 p-2 rounded-full transition-colors">
-          <MoreHorizontal className="w-5 h-5" />
-        </button>
+
+        {isOwner && (
+          <div className="relative">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="text-gray-500 hover:bg-gray-100 p-2 rounded-full transition-colors"
+            >
+              <MoreHorizontal className="w-5 h-5" />
+            </button>
+            {menuOpen && (
+              <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 shadow-md rounded-md w-36 z-10 py-1">
+                <button
+                  onClick={() => router.push(`/post/${post.id}/edit`)}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                >
+                  <Edit2 className="w-4 h-4" /> Edit
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                >
+                  <Trash2 className="w-4 h-4" /> Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Content */}
-      <Link href={`/post/${post.id}`}>
+      <Link href={isDetail ? "#" : `/post/${post.id}`}>
         <div className="mb-3">
           {post.content && (
             <p className="text-gray-800 whitespace-pre-wrap text-[15px] leading-relaxed mb-2">

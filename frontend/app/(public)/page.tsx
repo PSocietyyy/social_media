@@ -5,10 +5,14 @@ import RightSidebarPublic from "@/components/RightSidebarPublic";
 import { cookies } from "next/headers";
 import { getUserProfile } from "@/lib/api";
 
-async function getPosts(): Promise<Post[]> {
+async function getPosts(token?: string): Promise<Post[]> {
+  if (!token) return []; // Since backend requires auth
   try {
     const res = await fetch("http://localhost:3001/posts?page=1&limit=10", {
       cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     if (!res.ok) {
       return [];
@@ -22,8 +26,6 @@ async function getPosts(): Promise<Post[]> {
 }
 
 export default async function Home() {
-  const posts = await getPosts();
-
   const cookieStore = cookies();
   let token = undefined;
   if (typeof cookieStore.then === "function") {
@@ -33,6 +35,8 @@ export default async function Home() {
     // @ts-ignore
     token = cookieStore.get("access_token")?.value;
   }
+
+  const posts = await getPosts(token);
 
   let user = null;
   if (token) {
@@ -68,7 +72,9 @@ export default async function Home() {
           {/* Posts Feed */}
           <div className="w-full flex flex-col gap-4 mt-2">
             {posts.length > 0 ? (
-              posts.map((post) => <PostCard key={post.id} post={post} />)
+              posts.map((post) => (
+                <PostCard key={post.id} post={post} currentUser={user} />
+              ))
             ) : (
               <div className="w-full p-8 text-center bg-white rounded-xl shadow-sm border border-gray-200 mt-4 text-gray-500">
                 No posts available right now.

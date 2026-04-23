@@ -3,7 +3,6 @@ import {
   IsOptional,
   IsArray,
   IsEnum,
-  IsUrl,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -14,7 +13,7 @@ export enum MediaType {
 }
 
 export class CreateMediaDto {
-  @IsUrl()
+  @IsString()
   url: string;
 
   @IsEnum(MediaType)

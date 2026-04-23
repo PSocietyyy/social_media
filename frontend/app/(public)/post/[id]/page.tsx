@@ -3,6 +3,8 @@ import { ArrowLeft, MessageSquare, ThumbsUp } from "lucide-react";
 import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { cookies } from "next/headers";
+import { getUserProfile } from "@/lib/api";
 
 dayjs.extend(relativeTime);
 
@@ -46,6 +48,26 @@ export default async function PostDetailPage(props: {
   const params = await props.params;
   const post = await getPost(params.id);
 
+  const cookieStore = cookies();
+  let token = undefined;
+  if (typeof cookieStore.then === "function") {
+    const resolvedCookies = await cookieStore;
+    token = resolvedCookies.get("access_token")?.value;
+  } else {
+    // @ts-ignore
+    token = cookieStore.get("access_token")?.value;
+  }
+
+  let user = null;
+  if (token) {
+    try {
+      const res = await getUserProfile(token);
+      if (res?.data) {
+        user = res.data;
+      }
+    } catch {}
+  }
+
   if (!post) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center p-8">
@@ -73,7 +95,7 @@ export default async function PostDetailPage(props: {
         </Link>
 
         {/* Post Details using PostCard */}
-        <PostCard post={post} isDetail={true} />
+        <PostCard post={post} isDetail={true} currentUser={user} />
 
         {/* Comments Section */}
         <div className="bg-white rounded-xl border shadow-sm p-4 mt-4">
@@ -85,13 +107,25 @@ export default async function PostDetailPage(props: {
           </h4>
 
           <div className="flex gap-3 mb-6">
-            <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
               {/* Current User Dummy Avatar instead of null */}
-              <img
-                src={`https://i.pravatar.cc/150?u=me`}
-                alt="Me"
-                className="w-full h-full object-cover"
-              />
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : user ? (
+                <div className="w-full h-full bg-slate-800 flex items-center justify-center text-white font-semibold">
+                  {user.name.charAt(0)}
+                </div>
+              ) : (
+                <img
+                  src={`https://i.pravatar.cc/150?u=me`}
+                  alt="Me"
+                  className="w-full h-full object-cover"
+                />
+              )}
             </div>
             <div className="flex flex-col w-full flex-1 gap-2">
               <input
@@ -111,7 +145,7 @@ export default async function PostDetailPage(props: {
             {post.comments && post.comments.length > 0 ? (
               post.comments.map((comment) => (
                 <div key={comment.id} className="flex gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
                     {comment.author.avatar ? (
                       <img
                         src={comment.author.avatar}
@@ -119,7 +153,7 @@ export default async function PostDetailPage(props: {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-slate-800 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                      <div className="w-full h-full bg-slate-800 flex items-center justify-center text-white font-semibold shrink-0">
                         {comment.author.name.charAt(0)}
                       </div>
                     )}

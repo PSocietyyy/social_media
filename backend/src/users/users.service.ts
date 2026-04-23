@@ -34,6 +34,20 @@ export class UsersService {
         avatar: true,
         role: true,
         createdAt: true,
+        _count: {
+          select: { followers: true, following: true, posts: true },
+        },
+        posts: {
+          orderBy: { createdAt: 'desc' },
+          include: {
+            media: true,
+            hashtags: { include: { hashtag: true } },
+            _count: { select: { likes: true, comments: true } },
+            author: {
+              select: { id: true, name: true, username: true, avatar: true },
+            },
+          },
+        },
       },
     });
 
