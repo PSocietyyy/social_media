@@ -80,3 +80,44 @@ export const updateUserProfile = async (
 
   return response.json();
 };
+
+export const deleteUserProfile = async (token: string) => {
+  const response = await fetch(`${API_URL}/users/me`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to delete profile");
+  }
+
+  return response.json();
+};
+
+export const createPost = async (
+  token: string,
+  data: {
+    content?: string;
+    media?: { url: string; type: string }[];
+    hashtags?: string[];
+  },
+) => {
+  const response = await fetch(`${API_URL}/posts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to create post");
+  }
+
+  return response.json();
+};

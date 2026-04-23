@@ -40,7 +40,7 @@ const SidebarPublic = ({ user }: { user: any }) => {
         {user ? (
           <>
             <div className="flex items-center gap-2">
-              <div className="w-14 h-14 rounded-full bg-gray-400 overflow-hidden flex-shrink-0">
+              <div className="w-14 h-14 rounded-full bg-gray-400 overflow-hidden shrink-0">
                 {user.avatar ? (
                   <img
                     src={user.avatar}
@@ -76,7 +76,9 @@ const SidebarPublic = ({ user }: { user: any }) => {
                 <span>300</span>
               </div>
             </div>
-            <Button className="w-full">See Profile</Button>
+            <Button className="w-full" onClick={() => router.push("/profile")}>
+              See Profile
+            </Button>
           </>
         ) : (
           <div className="flex flex-col gap-2">

@@ -4,8 +4,10 @@ import Brand from "./Brand";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Navbar = ({ user }: { user?: any }) => {
+  const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
@@ -54,6 +56,7 @@ const Navbar = ({ user }: { user?: any }) => {
               variant="outline"
               size="lg"
               className="hidden sm:inline-flex"
+              onClick={() => router.push("/profile")}
             >
               <div className="w-7 h-7 rounded-full bg-gray-500 overflow-hidden shrink-0 flex items-center justify-center">
                 {user?.avatar ? (
@@ -72,7 +75,12 @@ const Navbar = ({ user }: { user?: any }) => {
             </Button>
 
             {/* Mobile avatar  */}
-            <Button variant="outline" size="lg" className="sm:hidden px-2">
+            <Button
+              variant="outline"
+              size="lg"
+              className="sm:hidden px-2"
+              onClick={() => router.push("/profile")}
+            >
               <div className="w-7 h-7 rounded-full bg-gray-500 overflow-hidden shrink-0 flex items-center justify-center">
                 {user?.avatar ? (
                   <img
