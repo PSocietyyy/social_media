@@ -1083,6 +1083,274 @@ Field tambahan:
 
 > `isFollowing` dihitung berdasarkan relasi antara authenticated user dan target user profile.
 
+## Comments
+
+### Create Comment
+
+```http
+POST /posts/:postId/comments
+```
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+Parameters
+
+| Parameter | Type    | Description |
+| ----------| ------- | ----------- |
+| `postId`  | integer | ID post     |
+
+Request Body
+
+```json
+{
+  "content": "Nice post 🔥"
+}
+```
+
+Rules
+
+- Endpoint membutuhkan authentication
+- `content` wajib diisi
+- Post harus ada
+- Comment otomatis terhubung ke authenticated user
+
+Response `201`
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "content": "Nice post 🔥",
+    "authorId": 2,
+    "postId": 1,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z",
+    "author": {
+      "id": 2,
+      "name": "Admin",
+      "username": "admin",
+      "avatar": null
+    }
+  }
+}
+```
+
+Error Response — post tidak ditemukan
+
+```json
+{
+  "message": "Post not found"
+}
+```
+
+---
+
+### Get Comments by Post
+
+```http
+GET /posts/:postId/comments
+```
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+```
+
+Parameters
+
+| Parameter | Type    | Description |
+| ----------| ------- | ----------- |
+| `postId`  | integer | ID post     |
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": [
+    {
+      "id": 1,
+      "content": "Nice post 🔥",
+      "authorId": 2,
+      "postId": 1,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z",
+      "author": {
+        "id": 2,
+        "name": "Admin",
+        "username": "admin",
+        "avatar": null
+      }
+    }
+  ]
+}
+```
+
+> Comment diurutkan dari yang terbaru (`createdAt DESC`)
+
+---
+
+### Update Comment
+
+```http
+PATCH /comments/:id
+```
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+Parameters
+
+| Parameter | Type    | Description    |
+| ----------| ------- | -------------- |
+| `id`      | integer | ID comment     |
+
+Request Body
+
+```json
+{
+  "content": "Updated comment"
+}
+```
+
+Rules
+
+- Hanya pemilik comment yang bisa update
+- `content` wajib diisi
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "content": "Updated comment",
+    "authorId": 2,
+    "postId": 1,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T01:00:00.000Z"
+  }
+}
+```
+
+Error Response — bukan pemilik
+
+```json
+{
+  "message": "You can only update your own comment"
+}
+```
+
+Error Response — comment tidak ditemukan
+
+```json
+{
+  "message": "Comment not found"
+}
+```
+
+---
+
+### Delete Comment
+
+```http
+DELETE /comments/:id
+```
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+```
+
+Parameters
+
+| Parameter | Type    | Description |
+| ----------| ------- | ----------- |
+| `id`      | integer | ID comment  |
+
+Rules
+
+- Hanya pemilik comment yang bisa delete
+
+Response `200`
+
+```json
+{
+  "message": "Comment deleted successfully",
+  "data": {
+    "message": "Comment deleted successfully"
+  }
+}
+```
+
+Error Response — bukan pemilik
+
+```json
+{
+  "message": "You can only delete your own comment"
+}
+```
+
+Error Response — comment tidak ditemukan
+
+```json
+{
+  "message": "Comment not found"
+}
+```
+
+---
+
+### Comment Included in Post Detail
+
+Endpoint berikut otomatis menyertakan comment:
+
+```http
+GET /posts/:id
+```
+
+Response
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "content": "Hello world",
+    "comments": [
+      {
+        "id": 1,
+        "content": "Updated comment",
+        "author": {
+          "id": 2,
+          "name": "Admin",
+          "username": "admin",
+          "avatar": null
+        }
+      }
+    ],
+    "_count": {
+      "comments": 1
+    }
+  }
+}
+```
+
+> Detail post menyertakan 20 komentar terbaru secara otomatis.
+
 ## Status Codes
 
 | Code | Description           |
