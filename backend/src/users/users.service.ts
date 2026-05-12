@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import * as bcrypt from 'bcrypt';
-import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +17,14 @@ export class UsersService {
         bio: true,
         avatar: true,
         role: true,
+
+        _count: {
+          select: {
+            followers: true,
+            following: true,
+            posts: true,
+          },
+        },
       },
     });
   }
@@ -25,6 +32,7 @@ export class UsersService {
   async findMe(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
+
       select: {
         id: true,
         name: true,
@@ -34,17 +42,43 @@ export class UsersService {
         avatar: true,
         role: true,
         createdAt: true,
+
         _count: {
-          select: { followers: true, following: true, posts: true },
+          select: {
+            followers: true,
+            following: true,
+            posts: true,
+          },
         },
+
         posts: {
-          orderBy: { createdAt: 'desc' },
+          orderBy: {
+            createdAt: 'desc',
+          },
+
           include: {
             media: true,
-            hashtags: { include: { hashtag: true } },
-            _count: { select: { likes: true, comments: true } },
+
+            hashtags: {
+              include: {
+                hashtag: true,
+              },
+            },
+
+            _count: {
+              select: {
+                likes: true,
+                comments: true,
+              },
+            },
+
             author: {
-              select: { id: true, name: true, username: true, avatar: true },
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                avatar: true,
+              },
             },
           },
         },
@@ -56,6 +90,79 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  async findOne(id: number, currentUserId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        bio: true,
+        avatar: true,
+        createdAt: true,
+
+        _count: {
+          select: {
+            followers: true,
+            following: true,
+            posts: true,
+          },
+        },
+
+        posts: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+
+          include: {
+            media: true,
+
+            hashtags: {
+              include: {
+                hashtag: true,
+              },
+            },
+
+            _count: {
+              select: {
+                likes: true,
+                comments: true,
+              },
+            },
+
+            author: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User tidak ditemukan');
+    }
+
+    const isFollowing = await this.prisma.follow.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId: currentUserId,
+          followingId: id,
+        },
+      },
+    });
+
+    return {
+      ...user,
+      isFollowing: !!isFollowing,
+    };
   }
 
   async update(id: number, dto: UpdateUserDto) {
@@ -73,7 +180,9 @@ export class UsersService {
 
     return this.prisma.user.update({
       where: { id },
+
       data: dto,
+
       select: {
         id: true,
         name: true,

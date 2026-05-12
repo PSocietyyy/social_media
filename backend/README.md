@@ -833,6 +833,256 @@ Error Response — tidak ditemukan
 
 ---
 
+## Follows
+
+### Follow User
+
+```
+POST /follows/:id
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+Parameters
+
+| Parameter | Type    | Description                 |
+| --------- | ------- | --------------------------- |
+| `id`      | integer | ID user yang ingin difollow |
+
+Rules
+
+* User tidak bisa follow dirinya sendiri
+* User tidak bisa follow user yang sama dua kali
+* Endpoint membutuhkan authentication
+
+Response `201`
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "followerId": 2,
+    "followingId": 3,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  }
+}
+```
+
+Error Response — follow diri sendiri
+
+```json
+{
+  "message": "Tidak bisa follow diri sendiri"
+}
+```
+
+Error Response — sudah follow
+
+```json
+{
+  "message": "Sudah follow user ini"
+}
+```
+
+Error Response — user tidak ditemukan
+
+```json
+{
+  "message": "User tidak ditemukan"
+}
+```
+
+---
+
+### Unfollow User
+
+```
+DELETE /follows/:id
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+Parameters
+
+| Parameter | Type    | Description                    |
+| --------- | ------- | ------------------------------ |
+| `id`      | integer | ID user yang ingin di-unfollow |
+
+Rules
+
+* User harus sudah follow target sebelumnya
+* Endpoint membutuhkan authentication
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "message": "Berhasil unfollow"
+  }
+}
+```
+
+Error Response — belum follow
+
+```json
+{
+  "message": "Belum follow user ini"
+}
+```
+
+---
+
+### Get Followers
+
+```
+GET /follows/followers/:id
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+Parameters
+
+| Parameter | Type    | Description    |
+| --------- | ------- | -------------- |
+| `id`      | integer | ID user target |
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": [
+    {
+      "id": 1,
+      "followerId": 2,
+      "followingId": 3,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "follower": {
+        "id": 2,
+        "name": "Admin",
+        "username": "admin",
+        "avatar": null
+      }
+    }
+  ]
+}
+```
+
+> Data diurutkan berdasarkan follower terbaru (`createdAt DESC`).
+
+---
+
+### Get Following
+
+```
+GET /follows/following/:id
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+Parameters
+
+| Parameter | Type    | Description    |
+| --------- | ------- | -------------- |
+| `id`      | integer | ID user target |
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": [
+    {
+      "id": 1,
+      "followerId": 2,
+      "followingId": 3,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "following": {
+        "id": 3,
+        "name": "John Doe",
+        "username": "john",
+        "avatar": null
+      }
+    }
+  ]
+}
+```
+
+> Data diurutkan berdasarkan following terbaru (`createdAt DESC`).
+
+---
+
+### User Profile Follow Info
+
+Endpoint profile user otomatis menyertakan informasi follow.
+
+#### Get User Profile
+
+```
+GET /users/:id
+```
+
+Headers
+
+```
+Authorization: Bearer <access_token>
+```
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 3,
+    "name": "John Doe",
+    "username": "john",
+    "bio": null,
+    "avatar": null,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+
+    "_count": {
+      "followers": 1,
+      "following": 0,
+      "posts": 0
+    },
+
+    "posts": [],
+
+    "isFollowing": true
+  }
+}
+```
+
+Field tambahan:
+
+| Field              | Type    | Description                                 |
+| --------------------| ---------| ---------------------------------------------|
+| `_count.followers` | number  | Jumlah followers user                       |
+| `_count.following` | number  | Jumlah following user                       |
+| `isFollowing`      | boolean | Apakah current user follow profile tersebut |
+
+> `isFollowing` dihitung berdasarkan relasi antara authenticated user dan target user profile.
+
 ## Status Codes
 
 | Code | Description           |

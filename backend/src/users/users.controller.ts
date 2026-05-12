@@ -1,17 +1,20 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
+  UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
+
 import { UsersService } from './users.service.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
-import { UseGuards, ForbiddenException } from '@nestjs/common';
+
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/guards/roles/roles.guard.js';
+
 import { CurrentUser } from '../common/decorators/current-user.decorator/current-user.decorator.js';
 
 @Controller('users')
@@ -29,8 +32,19 @@ export class UsersController {
     return this.usersService.findMe(user.sub);
   }
 
+  @Get(':id')
+  findOne(
+    @Param('id') id: string,
+    @CurrentUser() user: any,
+  ) {
+    return this.usersService.findOne(+id, user.sub);
+  }
+
   @Patch('me')
-  updateMe(@CurrentUser() user: any, @Body() dto: UpdateUserDto) {
+  updateMe(
+    @CurrentUser() user: any,
+    @Body() dto: UpdateUserDto,
+  ) {
     return this.usersService.update(user.sub, dto);
   }
 
@@ -48,18 +62,25 @@ export class UsersController {
     const targetId = +id;
 
     if (user.role !== 'ADMIN' && user.sub !== targetId) {
-      throw new ForbiddenException('Tidak boleh update user lain');
+      throw new ForbiddenException(
+        'Tidak boleh update user lain',
+      );
     }
 
     return this.usersService.update(targetId, dto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @CurrentUser() user: any) {
+  async remove(
+    @Param('id') id: string,
+    @CurrentUser() user: any,
+  ) {
     const targetId = +id;
 
     if (user.role !== 'ADMIN' && user.sub !== targetId) {
-      throw new ForbiddenException('Tidak boleh hapus user lain');
+      throw new ForbiddenException(
+        'Tidak boleh hapus user lain',
+      );
     }
 
     return this.usersService.remove(targetId);
