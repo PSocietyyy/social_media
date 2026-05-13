@@ -163,3 +163,104 @@ export const deletePost = async (token: string, id: number) => {
 
   return response.json();
 };
+
+export const getUserById = async (token: string, id: number) => {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to fetch user");
+  }
+
+  return response.json();
+};
+
+export const followUser = async (token: string, id: number) => {
+  const response = await fetch(`${API_URL}/follows/${id}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to follow user");
+  }
+
+  return response.json();
+};
+
+export const unfollowUser = async (token: string, id: number) => {
+  const response = await fetch(`${API_URL}/follows/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to unfollow user");
+  }
+
+  return response.json();
+};
+
+export const createComment = async (token: string, postId: number, content: string) => {
+  const response = await fetch(`${API_URL}/posts/${postId}/comments`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ content }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to create comment");
+  }
+
+  return response.json();
+};
+
+export const updateComment = async (token: string, id: number, content: string) => {
+  const response = await fetch(`${API_URL}/comments/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ content }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to update comment");
+  }
+
+  return response.json();
+};
+
+export const deleteComment = async (token: string, id: number) => {
+  const response = await fetch(`${API_URL}/comments/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to delete comment");
+  }
+
+  return response.json();
+};
+

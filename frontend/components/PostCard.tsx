@@ -105,12 +105,12 @@ export const PostCard = ({
               </div>
             )}
           </div>
-          <div className="flex flex-col">
+          <Link href={`/user/${post.author.id}`} className="flex flex-col hover:underline">
             <h3 className="font-semibold text-[15px]">{post.author.name}</h3>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-500 no-underline">
               {dayjs(post.createdAt).fromNow()}
             </span>
-          </div>
+          </Link>
         </div>
 
         {isOwner && (
