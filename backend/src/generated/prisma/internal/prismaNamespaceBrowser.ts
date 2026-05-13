@@ -99,6 +99,13 @@ export const PostScalarFieldEnum = {
   id: 'id',
   content: 'content',
   authorId: 'authorId',
+  likeCount: 'likeCount',
+  commentCount: 'commentCount',
+  viewCount: 'viewCount',
+  score: 'score',
+  finalScore: 'finalScore',
+  isDeleted: 'isDeleted',
+  isShadowBanned: 'isShadowBanned',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

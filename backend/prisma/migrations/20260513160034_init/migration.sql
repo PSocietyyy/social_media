@@ -26,6 +26,13 @@ CREATE TABLE "Post" (
     "id" SERIAL NOT NULL,
     "content" TEXT,
     "authorId" INTEGER NOT NULL,
+    "likeCount" INTEGER NOT NULL DEFAULT 0,
+    "commentCount" INTEGER NOT NULL DEFAULT 0,
+    "viewCount" INTEGER NOT NULL DEFAULT 0,
+    "score" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "finalScore" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "isShadowBanned" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -112,6 +119,12 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE INDEX "Post_authorId_idx" ON "Post"("authorId");
+
+-- CreateIndex
+CREATE INDEX "Post_createdAt_idx" ON "Post"("createdAt" DESC);
+
+-- CreateIndex
+CREATE INDEX "Post_finalScore_idx" ON "Post"("finalScore" DESC);
 
 -- CreateIndex
 CREATE INDEX "Comment_postId_idx" ON "Comment"("postId");

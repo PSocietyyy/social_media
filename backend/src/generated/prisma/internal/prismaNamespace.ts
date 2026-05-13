@@ -1138,6 +1138,13 @@ export const PostScalarFieldEnum = {
   id: 'id',
   content: 'content',
   authorId: 'authorId',
+  likeCount: 'likeCount',
+  commentCount: 'commentCount',
+  viewCount: 'viewCount',
+  score: 'score',
+  finalScore: 'finalScore',
+  isDeleted: 'isDeleted',
+  isShadowBanned: 'isShadowBanned',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1311,20 +1318,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'MediaType'
- */
-export type EnumMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaType'>
-    
-
-
-/**
- * Reference to a field of type 'MediaType[]'
- */
-export type ListEnumMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaType[]'>
-    
-
-
-/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1335,6 +1328,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MediaType'
+ */
+export type EnumMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaType'>
+    
+
+
+/**
+ * Reference to a field of type 'MediaType[]'
+ */
+export type ListEnumMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaType[]'>
     
 
 /**

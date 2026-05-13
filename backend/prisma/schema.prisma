@@ -48,9 +48,19 @@ model User {
 }
 
 model Post {
-  id       Int     @id @default(autoincrement())
-  content  String?
-  authorId Int
+  id           Int      @id @default(autoincrement())
+  content      String?
+  authorId     Int
+
+  likeCount    Int      @default(0)
+  commentCount Int      @default(0)
+  viewCount    Int      @default(0)
+
+  score        Float    @default(0)
+  finalScore   Float    @default(0)
+
+  isDeleted      Boolean @default(false)
+  isShadowBanned Boolean @default(false)
 
   author   User      @relation(fields: [authorId], references: [id])
   media    Media[]
@@ -63,6 +73,8 @@ model Post {
   updatedAt DateTime @updatedAt
 
   @@index([authorId])
+  @@index([createdAt(sort: Desc)])
+  @@index([finalScore(sort: Desc)])
 }
 
 model Media {

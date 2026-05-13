@@ -1350,6 +1350,178 @@ Response
 ```
 
 > Detail post menyertakan 20 komentar terbaru secara otomatis.
+---
+
+
+## Likes
+
+### Like Post
+
+```http
+POST /likes/:postId
+````
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+```
+
+Parameters
+
+| Parameter | Type    | Description |
+| --------- | ------- | ----------- |
+| `postId`  | integer | ID post     |
+
+Rules
+
+* Endpoint membutuhkan authentication
+* User hanya bisa like 1 kali pada post yang sama
+* Post harus tersedia
+* Like otomatis terhubung ke authenticated user
+
+Response `201`
+
+```json
+{
+  "message": "Post liked",
+  "data": {
+    "message": "Post liked"
+  }
+}
+```
+
+Error Response — post tidak ditemukan
+
+```json
+{
+  "message": "Post not found"
+}
+```
+
+Error Response — sudah like
+
+```json
+{
+  "message": "You already liked this post"
+}
+```
+
+---
+
+### Unlike Post
+
+```http
+DELETE /likes/:postId
+```
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+```
+
+Parameters
+
+| Parameter | Type    | Description |
+| --------- | ------- | ----------- |
+| `postId`  | integer | ID post     |
+
+Rules
+
+* Endpoint membutuhkan authentication
+* User harus sudah like post sebelumnya
+
+Response `200`
+
+```json
+{
+  "message": "Post unliked",
+  "data": {
+    "message": "Post unliked"
+  }
+}
+```
+
+Error Response — belum like
+
+```json
+{
+  "message": "You have not liked this post"
+}
+```
+
+Error Response — post tidak ditemukan
+
+```json
+{
+  "message": "Post not found"
+}
+```
+
+---
+
+### Likes Count in Posts
+
+Endpoint post otomatis menyertakan jumlah likes.
+
+#### Get All Posts
+
+```http
+GET /posts
+```
+
+Response
+
+```json
+{
+  "message": "Success",
+  "data": [
+    {
+      "id": 1,
+      "content": "Hello world",
+      "_count": {
+        "likes": 5,
+        "comments": 2
+      }
+    }
+  ]
+}
+```
+
+---
+
+#### Get Post by ID
+
+```http
+GET /posts/:id
+```
+
+Response
+
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "content": "Hello world",
+    "_count": {
+      "likes": 5,
+      "comments": 2
+    }
+  }
+}
+```
+
+Field tambahan:
+
+| Field             | Type   | Description          |
+| ----------------- | ------ | -------------------- |
+| `_count.likes`    | number | Jumlah likes post    |
+| `_count.comments` | number | Jumlah comments post |
+
+---
+
 
 ## Status Codes
 

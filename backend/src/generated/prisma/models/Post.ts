@@ -29,17 +29,34 @@ export type AggregatePost = {
 export type PostAvgAggregateOutputType = {
   id: number | null
   authorId: number | null
+  likeCount: number | null
+  commentCount: number | null
+  viewCount: number | null
+  score: number | null
+  finalScore: number | null
 }
 
 export type PostSumAggregateOutputType = {
   id: number | null
   authorId: number | null
+  likeCount: number | null
+  commentCount: number | null
+  viewCount: number | null
+  score: number | null
+  finalScore: number | null
 }
 
 export type PostMinAggregateOutputType = {
   id: number | null
   content: string | null
   authorId: number | null
+  likeCount: number | null
+  commentCount: number | null
+  viewCount: number | null
+  score: number | null
+  finalScore: number | null
+  isDeleted: boolean | null
+  isShadowBanned: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -48,6 +65,13 @@ export type PostMaxAggregateOutputType = {
   id: number | null
   content: string | null
   authorId: number | null
+  likeCount: number | null
+  commentCount: number | null
+  viewCount: number | null
+  score: number | null
+  finalScore: number | null
+  isDeleted: boolean | null
+  isShadowBanned: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +80,13 @@ export type PostCountAggregateOutputType = {
   id: number
   content: number
   authorId: number
+  likeCount: number
+  commentCount: number
+  viewCount: number
+  score: number
+  finalScore: number
+  isDeleted: number
+  isShadowBanned: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -65,17 +96,34 @@ export type PostCountAggregateOutputType = {
 export type PostAvgAggregateInputType = {
   id?: true
   authorId?: true
+  likeCount?: true
+  commentCount?: true
+  viewCount?: true
+  score?: true
+  finalScore?: true
 }
 
 export type PostSumAggregateInputType = {
   id?: true
   authorId?: true
+  likeCount?: true
+  commentCount?: true
+  viewCount?: true
+  score?: true
+  finalScore?: true
 }
 
 export type PostMinAggregateInputType = {
   id?: true
   content?: true
   authorId?: true
+  likeCount?: true
+  commentCount?: true
+  viewCount?: true
+  score?: true
+  finalScore?: true
+  isDeleted?: true
+  isShadowBanned?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -84,6 +132,13 @@ export type PostMaxAggregateInputType = {
   id?: true
   content?: true
   authorId?: true
+  likeCount?: true
+  commentCount?: true
+  viewCount?: true
+  score?: true
+  finalScore?: true
+  isDeleted?: true
+  isShadowBanned?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -92,6 +147,13 @@ export type PostCountAggregateInputType = {
   id?: true
   content?: true
   authorId?: true
+  likeCount?: true
+  commentCount?: true
+  viewCount?: true
+  score?: true
+  finalScore?: true
+  isDeleted?: true
+  isShadowBanned?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -187,6 +249,13 @@ export type PostGroupByOutputType = {
   id: number
   content: string | null
   authorId: number
+  likeCount: number
+  commentCount: number
+  viewCount: number
+  score: number
+  finalScore: number
+  isDeleted: boolean
+  isShadowBanned: boolean
   createdAt: Date
   updatedAt: Date
   _count: PostCountAggregateOutputType | null
@@ -218,6 +287,13 @@ export type PostWhereInput = {
   id?: Prisma.IntFilter<"Post"> | number
   content?: Prisma.StringNullableFilter<"Post"> | string | null
   authorId?: Prisma.IntFilter<"Post"> | number
+  likeCount?: Prisma.IntFilter<"Post"> | number
+  commentCount?: Prisma.IntFilter<"Post"> | number
+  viewCount?: Prisma.IntFilter<"Post"> | number
+  score?: Prisma.FloatFilter<"Post"> | number
+  finalScore?: Prisma.FloatFilter<"Post"> | number
+  isDeleted?: Prisma.BoolFilter<"Post"> | boolean
+  isShadowBanned?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -231,6 +307,13 @@ export type PostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  score?: Prisma.SortOrder
+  finalScore?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isShadowBanned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   author?: Prisma.UserOrderByWithRelationInput
@@ -247,6 +330,13 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   content?: Prisma.StringNullableFilter<"Post"> | string | null
   authorId?: Prisma.IntFilter<"Post"> | number
+  likeCount?: Prisma.IntFilter<"Post"> | number
+  commentCount?: Prisma.IntFilter<"Post"> | number
+  viewCount?: Prisma.IntFilter<"Post"> | number
+  score?: Prisma.FloatFilter<"Post"> | number
+  finalScore?: Prisma.FloatFilter<"Post"> | number
+  isDeleted?: Prisma.BoolFilter<"Post"> | boolean
+  isShadowBanned?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -260,6 +350,13 @@ export type PostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  score?: Prisma.SortOrder
+  finalScore?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isShadowBanned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
@@ -276,12 +373,26 @@ export type PostScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Post"> | number
   content?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   authorId?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  likeCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  commentCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  viewCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  score?: Prisma.FloatWithAggregatesFilter<"Post"> | number
+  finalScore?: Prisma.FloatWithAggregatesFilter<"Post"> | number
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
+  isShadowBanned?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
 }
 
 export type PostCreateInput = {
   content?: string | null
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -295,6 +406,13 @@ export type PostUncheckedCreateInput = {
   id?: number
   content?: string | null
   authorId: number
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutPostInput
@@ -305,6 +423,13 @@ export type PostUncheckedCreateInput = {
 
 export type PostUpdateInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -318,6 +443,13 @@ export type PostUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   media?: Prisma.MediaUncheckedUpdateManyWithoutPostNestedInput
@@ -330,12 +462,26 @@ export type PostCreateManyInput = {
   id?: number
   content?: string | null
   authorId: number
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PostUpdateManyMutationInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -344,6 +490,13 @@ export type PostUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -362,6 +515,13 @@ export type PostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  score?: Prisma.SortOrder
+  finalScore?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isShadowBanned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -369,12 +529,24 @@ export type PostCountOrderByAggregateInput = {
 export type PostAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  score?: Prisma.SortOrder
+  finalScore?: Prisma.SortOrder
 }
 
 export type PostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  score?: Prisma.SortOrder
+  finalScore?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isShadowBanned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -383,6 +555,13 @@ export type PostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  score?: Prisma.SortOrder
+  finalScore?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isShadowBanned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -390,6 +569,11 @@ export type PostMinOrderByAggregateInput = {
 export type PostSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  score?: Prisma.SortOrder
+  finalScore?: Prisma.SortOrder
 }
 
 export type PostScalarRelationFilter = {
@@ -437,6 +621,14 @@ export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
   update?: Prisma.PostUpdateWithWhereUniqueWithoutAuthorInput | Prisma.PostUpdateWithWhereUniqueWithoutAuthorInput[]
   updateMany?: Prisma.PostUpdateManyWithWhereWithoutAuthorInput | Prisma.PostUpdateManyWithWhereWithoutAuthorInput[]
   deleteMany?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type PostCreateNestedOneWithoutMediaInput = {
@@ -497,6 +689,13 @@ export type PostUpdateOneRequiredWithoutHashtagsNestedInput = {
 
 export type PostCreateWithoutAuthorInput = {
   content?: string | null
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   media?: Prisma.MediaCreateNestedManyWithoutPostInput
@@ -508,6 +707,13 @@ export type PostCreateWithoutAuthorInput = {
 export type PostUncheckedCreateWithoutAuthorInput = {
   id?: number
   content?: string | null
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutPostInput
@@ -549,12 +755,26 @@ export type PostScalarWhereInput = {
   id?: Prisma.IntFilter<"Post"> | number
   content?: Prisma.StringNullableFilter<"Post"> | string | null
   authorId?: Prisma.IntFilter<"Post"> | number
+  likeCount?: Prisma.IntFilter<"Post"> | number
+  commentCount?: Prisma.IntFilter<"Post"> | number
+  viewCount?: Prisma.IntFilter<"Post"> | number
+  score?: Prisma.FloatFilter<"Post"> | number
+  finalScore?: Prisma.FloatFilter<"Post"> | number
+  isDeleted?: Prisma.BoolFilter<"Post"> | boolean
+  isShadowBanned?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
 }
 
 export type PostCreateWithoutMediaInput = {
   content?: string | null
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -567,6 +787,13 @@ export type PostUncheckedCreateWithoutMediaInput = {
   id?: number
   content?: string | null
   authorId: number
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -592,6 +819,13 @@ export type PostUpdateToOneWithWhereWithoutMediaInput = {
 
 export type PostUpdateWithoutMediaInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -604,6 +838,13 @@ export type PostUncheckedUpdateWithoutMediaInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -613,6 +854,13 @@ export type PostUncheckedUpdateWithoutMediaInput = {
 
 export type PostCreateWithoutCommentsInput = {
   content?: string | null
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -625,6 +873,13 @@ export type PostUncheckedCreateWithoutCommentsInput = {
   id?: number
   content?: string | null
   authorId: number
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutPostInput
@@ -650,6 +905,13 @@ export type PostUpdateToOneWithWhereWithoutCommentsInput = {
 
 export type PostUpdateWithoutCommentsInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -662,6 +924,13 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   media?: Prisma.MediaUncheckedUpdateManyWithoutPostNestedInput
@@ -671,6 +940,13 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
 
 export type PostCreateWithoutLikesInput = {
   content?: string | null
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -683,6 +959,13 @@ export type PostUncheckedCreateWithoutLikesInput = {
   id?: number
   content?: string | null
   authorId: number
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutPostInput
@@ -708,6 +991,13 @@ export type PostUpdateToOneWithWhereWithoutLikesInput = {
 
 export type PostUpdateWithoutLikesInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -720,6 +1010,13 @@ export type PostUncheckedUpdateWithoutLikesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   media?: Prisma.MediaUncheckedUpdateManyWithoutPostNestedInput
@@ -729,6 +1026,13 @@ export type PostUncheckedUpdateWithoutLikesInput = {
 
 export type PostCreateWithoutHashtagsInput = {
   content?: string | null
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -741,6 +1045,13 @@ export type PostUncheckedCreateWithoutHashtagsInput = {
   id?: number
   content?: string | null
   authorId: number
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutPostInput
@@ -766,6 +1077,13 @@ export type PostUpdateToOneWithWhereWithoutHashtagsInput = {
 
 export type PostUpdateWithoutHashtagsInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -778,6 +1096,13 @@ export type PostUncheckedUpdateWithoutHashtagsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   media?: Prisma.MediaUncheckedUpdateManyWithoutPostNestedInput
@@ -788,12 +1113,26 @@ export type PostUncheckedUpdateWithoutHashtagsInput = {
 export type PostCreateManyAuthorInput = {
   id?: number
   content?: string | null
+  likeCount?: number
+  commentCount?: number
+  viewCount?: number
+  score?: number
+  finalScore?: number
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PostUpdateWithoutAuthorInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   media?: Prisma.MediaUpdateManyWithoutPostNestedInput
@@ -805,6 +1144,13 @@ export type PostUpdateWithoutAuthorInput = {
 export type PostUncheckedUpdateWithoutAuthorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   media?: Prisma.MediaUncheckedUpdateManyWithoutPostNestedInput
@@ -816,6 +1162,13 @@ export type PostUncheckedUpdateWithoutAuthorInput = {
 export type PostUncheckedUpdateManyWithoutAuthorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isShadowBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -882,6 +1235,13 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   content?: boolean
   authorId?: boolean
+  likeCount?: boolean
+  commentCount?: boolean
+  viewCount?: boolean
+  score?: boolean
+  finalScore?: boolean
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -896,6 +1256,13 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   content?: boolean
   authorId?: boolean
+  likeCount?: boolean
+  commentCount?: boolean
+  viewCount?: boolean
+  score?: boolean
+  finalScore?: boolean
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -905,6 +1272,13 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   content?: boolean
   authorId?: boolean
+  likeCount?: boolean
+  commentCount?: boolean
+  viewCount?: boolean
+  score?: boolean
+  finalScore?: boolean
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -914,11 +1288,18 @@ export type PostSelectScalar = {
   id?: boolean
   content?: boolean
   authorId?: boolean
+  likeCount?: boolean
+  commentCount?: boolean
+  viewCount?: boolean
+  score?: boolean
+  finalScore?: boolean
+  isDeleted?: boolean
+  isShadowBanned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "authorId" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "authorId" | "likeCount" | "commentCount" | "viewCount" | "score" | "finalScore" | "isDeleted" | "isShadowBanned" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   media?: boolean | Prisma.Post$mediaArgs<ExtArgs>
@@ -947,6 +1328,13 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: number
     content: string | null
     authorId: number
+    likeCount: number
+    commentCount: number
+    viewCount: number
+    score: number
+    finalScore: number
+    isDeleted: boolean
+    isShadowBanned: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["post"]>
@@ -1380,6 +1768,13 @@ export interface PostFieldRefs {
   readonly id: Prisma.FieldRef<"Post", 'Int'>
   readonly content: Prisma.FieldRef<"Post", 'String'>
   readonly authorId: Prisma.FieldRef<"Post", 'Int'>
+  readonly likeCount: Prisma.FieldRef<"Post", 'Int'>
+  readonly commentCount: Prisma.FieldRef<"Post", 'Int'>
+  readonly viewCount: Prisma.FieldRef<"Post", 'Int'>
+  readonly score: Prisma.FieldRef<"Post", 'Float'>
+  readonly finalScore: Prisma.FieldRef<"Post", 'Float'>
+  readonly isDeleted: Prisma.FieldRef<"Post", 'Boolean'>
+  readonly isShadowBanned: Prisma.FieldRef<"Post", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Post", 'DateTime'>
 }
