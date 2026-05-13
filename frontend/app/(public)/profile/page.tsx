@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Settings, Grid3X3, ArrowLeft } from "lucide-react";
 import { PostCard } from "@/components/PostCard";
+import { ProfileStats } from "@/components/ProfileStats";
 
 export default async function ProfilePage() {
   const cookieStore = cookies();
@@ -68,24 +69,12 @@ export default async function ProfilePage() {
               </div>
             </div>
 
-            <div className="flex gap-6 mb-4">
-              <div className="flex gap-1">
-                <span className="font-semibold">{user._count?.posts || 0}</span>
-                <span className="text-gray-900">posts</span>
-              </div>
-              <div className="flex gap-1">
-                <span className="font-semibold">
-                  {user._count?.followers || 0}
-                </span>
-                <span className="text-gray-900">followers</span>
-              </div>
-              <div className="flex gap-1">
-                <span className="font-semibold">
-                  {user._count?.following || 0}
-                </span>
-                <span className="text-gray-900">following</span>
-              </div>
-            </div>
+            <ProfileStats
+              userId={user.id}
+              postsCount={user._count?.posts || 0}
+              followersCount={user._count?.followers || 0}
+              followingCount={user._count?.following || 0}
+            />
 
             <div className="flex flex-col">
               <span className="font-semibold text-[15px]">{user.name}</span>

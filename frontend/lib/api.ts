@@ -264,3 +264,35 @@ export const deleteComment = async (token: string, id: number) => {
   return response.json();
 };
 
+export const getFollowers = async (token: string, userId: number) => {
+  const response = await fetch(`${API_URL}/follows/followers/${userId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to fetch followers");
+  }
+
+  return response.json();
+};
+
+export const getFollowing = async (token: string, userId: number) => {
+  const response = await fetch(`${API_URL}/follows/following/${userId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to fetch following");
+  }
+
+  return response.json();
+};
+
