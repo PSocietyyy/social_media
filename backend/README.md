@@ -459,13 +459,13 @@ POST /auth/logout    Bearer + { refresh_token }
 
 ### Create Post
 
-```
+```http
 POST /posts
 ```
 
 Headers
 
-```
+```txt
 Authorization: Bearer <access_token>
 Content-Type: application/json
 ```
@@ -474,7 +474,7 @@ Request Body
 
 ```json
 {
-  "content": "Hello world!",
+  "content": "Hello world 🔥",
   "media": [
     {
       "url": "https://example.com/image.jpg",
@@ -485,9 +485,16 @@ Request Body
 }
 ```
 
-> `content` dan `media` bersifat opsional, tapi **minimal salah satu harus diisi**.  
-> `type` pada media hanya menerima nilai `IMAGE` atau `VIDEO`.  
-> `hashtags` akan disimpan dalam lowercase secara otomatis.
+Rules
+
+* `content` dan `media` bersifat opsional
+* Minimal salah satu harus diisi
+* `type` media hanya menerima:
+
+  * `IMAGE`
+  * `VIDEO`
+* Hashtag otomatis disimpan lowercase
+* Endpoint membutuhkan authentication
 
 Response `201`
 
@@ -496,14 +503,17 @@ Response `201`
   "message": "Success",
   "data": {
     "id": 1,
-    "content": "Hello world!",
+    "content": "Hello world 🔥",
     "authorId": 3,
+
     "author": {
       "id": 3,
       "name": "John Doe",
       "username": "john",
-      "avatar": null
+      "avatar": null,
+      "isVerified": false
     },
+
     "media": [
       {
         "id": 1,
@@ -513,11 +523,13 @@ Response `201`
         "createdAt": "2026-01-01T00:00:00.000Z"
       }
     ],
+
     "hashtags": [
       {
         "id": 1,
         "postId": 1,
         "hashtagId": 1,
+
         "hashtag": {
           "id": 1,
           "name": "nestjs",
@@ -525,17 +537,19 @@ Response `201`
         }
       }
     ],
+
     "_count": {
       "likes": 0,
       "comments": 0
     },
+
     "createdAt": "2026-01-01T00:00:00.000Z",
     "updatedAt": "2026-01-01T00:00:00.000Z"
   }
 }
 ```
 
-Error Response — konten kosong
+Error Response — content kosong
 
 ```json
 {
@@ -545,140 +559,375 @@ Error Response — konten kosong
 
 ---
 
-### Get All Posts
+### Latest Feed
 
-```
+```http
 GET /posts
 ```
 
 Headers
 
-```
+```txt
 Authorization: Bearer <access_token>
 ```
 
 Query Parameters
 
-| Parameter | Type    | Default | Description             |
-| --------- | ------- | ------- | ----------------------- |
-| `page`    | integer | `1`     | Halaman yang diambil    |
-| `limit`   | integer | `10`    | Jumlah post per halaman |
+| Parameter | Type    | Default | Description       |
+| --------- | ------- | ------- | ----------------- |
+| `cursor`  | integer | -       | Cursor pagination |
+| `limit`   | integer | 10      | Jumlah post       |
 
-Contoh Request
+Example
 
+```http
+GET /posts?limit=10
 ```
-GET /posts?page=1&limit=5
+
+```http
+GET /posts?cursor=20&limit=10
 ```
+
+Rules
+
+* Menggunakan cursor pagination
+* Cocok untuk infinite scroll
+* Data diurutkan berdasarkan:
+
+  * `createdAt DESC`
+* Hanya menampilkan post:
+
+  * `isDeleted = false`
+  * `isShadowBanned = false`
 
 Response `200`
 
 ```json
 {
   "message": "Success",
+
   "data": [
     {
-      "id": 2,
-      "content": "Post terbaru",
-      "authorId": 3,
+      "id": 22,
+      "content": "Newest post",
+
       "author": {
         "id": 3,
         "name": "John Doe",
         "username": "john",
-        "avatar": null
+        "avatar": null,
+        "isVerified": false
       },
+
       "media": [],
+
       "hashtags": [],
+
+      "comments": [
+        {
+          "id": 8,
+          "content": "Nice 🔥",
+
+          "author": {
+            "id": 2,
+            "name": "Jane",
+            "username": "jane",
+            "avatar": null
+          }
+        }
+      ],
+
       "_count": {
-        "likes": 5,
-        "comments": 2
+        "likes": 12,
+        "comments": 5
       },
-      "createdAt": "2026-01-02T00:00:00.000Z",
-      "updatedAt": "2026-01-02T00:00:00.000Z"
+
+      "createdAt": "2026-01-02T00:00:00.000Z"
     }
-  ]
+  ],
+
+  "meta": {
+    "nextCursor": 22,
+    "hasMore": true
+  }
 }
 ```
 
-> ⚠️ **Bug**: Data `meta` pagination (`total`, `page`, `limit`, `totalPages`) **tidak muncul** di response karena interceptor hanya mengambil field `data` dari return service. Untuk fix, perlu penyesuaian di `PostService.findAll()`.  
-> Post diurutkan dari yang **terbaru** (`createdAt DESC`).
+> Feed hanya mengambil 2 komentar terbaru per post.
 
 ---
 
-### Get Post by ID
+### For You Feed (FYP)
 
+```http
+GET /posts/fyp
 ```
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+```
+
+Query Parameters
+
+| Parameter | Type    | Default | Description       |
+| --------- | ------- | ------- | ----------------- |
+| `cursor`  | integer | -       | Cursor pagination |
+| `limit`   | integer | 10      | Jumlah post       |
+
+Example
+
+```http
+GET /posts/fyp?limit=10
+```
+
+Rules
+
+* Menggunakan cursor pagination
+* Diurutkan berdasarkan:
+
+  1. `finalScore DESC`
+  2. `createdAt DESC`
+* Hanya menampilkan post:
+
+  * `isDeleted = false`
+  * `isShadowBanned = false`
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+
+  "data": [
+    {
+      "id": 15,
+      "content": "Trending content 🔥",
+
+      "author": {
+        "id": 5,
+        "name": "Creator",
+        "username": "creator",
+        "avatar": null,
+        "isVerified": true
+      },
+
+      "_count": {
+        "likes": 500,
+        "comments": 120
+      },
+
+      "createdAt": "2026-01-02T00:00:00.000Z"
+    }
+  ],
+
+  "meta": {
+    "nextCursor": 15,
+    "hasMore": true
+  }
+}
+```
+
+> Endpoint ini cocok untuk fitur infinite scroll seperti TikTok / Instagram Reels.
+
+---
+
+### Following Feed
+
+```http
+GET /posts/following
+```
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+```
+
+Query Parameters
+
+| Parameter | Type    | Default | Description       |
+| --------- | ------- | ------- | ----------------- |
+| `cursor`  | integer | -       | Cursor pagination |
+| `limit`   | integer | 10      | Jumlah post       |
+
+Rules
+
+* Hanya mengambil post dari user yang difollow
+* Menggunakan cursor pagination
+* Diurutkan berdasarkan:
+
+  * `createdAt DESC`
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+
+  "data": [
+    {
+      "id": 10,
+      "content": "Post from following user",
+
+      "author": {
+        "id": 7,
+        "name": "Jane Doe",
+        "username": "jane",
+        "avatar": null,
+        "isVerified": false
+      },
+
+      "_count": {
+        "likes": 20,
+        "comments": 4
+      }
+    }
+  ],
+
+  "meta": {
+    "nextCursor": 10,
+    "hasMore": true
+  }
+}
+```
+
+---
+
+### Trending Feed
+
+```http
+GET /posts/trending
+```
+
+Headers
+
+```txt
+Authorization: Bearer <access_token>
+```
+
+Query Parameters
+
+| Parameter | Type    | Default | Description       |
+| --------- | ------- | ------- | ----------------- |
+| `cursor`  | integer | -       | Cursor pagination |
+| `limit`   | integer | 10      | Jumlah post       |
+
+Rules
+
+* Menggunakan cursor pagination
+* Hanya mengambil post dalam 24 jam terakhir
+* Diurutkan berdasarkan:
+
+  1. `viewCount DESC`
+  2. `likeCount DESC`
+
+Response `200`
+
+```json
+{
+  "message": "Success",
+
+  "data": [
+    {
+      "id": 99,
+      "content": "Viral post 🚀",
+
+      "_count": {
+        "likes": 999,
+        "comments": 200
+      },
+
+      "createdAt": "2026-01-02T00:00:00.000Z"
+    }
+  ],
+
+  "meta": {
+    "nextCursor": 99,
+    "hasMore": true
+  }
+}
+```
+
+---
+
+### Get Post By ID
+
+```http
 GET /posts/:id
 ```
 
 Headers
 
-```
+```txt
 Authorization: Bearer <access_token>
 ```
+
+Parameters
+
+| Parameter | Type    | Description |
+| --------- | ------- | ----------- |
+| `id`      | integer | ID post     |
+
+Rules
+
+* Endpoint otomatis menambah:
+
+  * `viewCount +1`
+* Menyertakan:
+
+  * media
+  * hashtags
+  * author
+  * 20 komentar terbaru
+  * total likes/comments
 
 Response `200`
 
 ```json
 {
   "message": "Success",
+
   "data": {
     "id": 1,
-    "content": "Hello world!",
-    "authorId": 3,
+    "content": "Hello world",
+
     "author": {
       "id": 3,
       "name": "John Doe",
       "username": "john",
-      "avatar": null
+      "avatar": null,
+      "isVerified": false
     },
-    "media": [
+
+    "media": [],
+
+    "hashtags": [],
+
+    "comments": [
       {
         "id": 1,
-        "url": "https://example.com/image.jpg",
-        "type": "IMAGE",
-        "postId": 1,
-        "createdAt": "2026-01-01T00:00:00.000Z"
-      }
-    ],
-    "hashtags": [
-      {
-        "id": 1,
-        "postId": 1,
-        "hashtagId": 1,
-        "hashtag": {
-          "id": 1,
-          "name": "nestjs",
-          "createdAt": "2026-01-01T00:00:00.000Z"
+        "content": "Nice 🔥",
+
+        "author": {
+          "id": 2,
+          "name": "Jane",
+          "username": "jane",
+          "avatar": null
         }
       }
     ],
-    "comments": [
-      {
-        "id": 5,
-        "content": "Keren banget!",
-        "authorId": 2,
-        "postId": 1,
-        "author": {
-          "id": 2,
-          "name": "Jane Doe",
-          "username": "jane",
-          "avatar": null
-        },
-        "createdAt": "2026-01-01T01:00:00.000Z",
-        "updatedAt": "2026-01-01T01:00:00.000Z"
-      }
-    ],
+
     "_count": {
       "likes": 5,
       "comments": 1
     },
-    "createdAt": "2026-01-01T00:00:00.000Z",
-    "updatedAt": "2026-01-01T00:00:00.000Z"
+
+    "createdAt": "2026-01-01T00:00:00.000Z"
   }
 }
 ```
-
-> Detail post menyertakan **10 komentar terbaru** (`createdAt DESC`).
 
 Error Response
 
@@ -692,13 +941,13 @@ Error Response
 
 ### Update Post
 
-```
+```http
 PATCH /posts/:id
 ```
 
 Headers
 
-```
+```txt
 Authorization: Bearer <access_token>
 Content-Type: application/json
 ```
@@ -708,63 +957,40 @@ Request Body
 ```json
 {
   "content": "Updated content",
+
   "media": [
     {
       "url": "https://example.com/new-image.jpg",
       "type": "IMAGE"
     }
   ],
-  "hashtags": ["updated", "post"]
+
+  "hashtags": ["updated", "nestjs"]
 }
 ```
 
-> Semua field bersifat **opsional** — hanya kirim field yang ingin diubah.  
-> Jika `media` dikirim, **semua media lama akan diganti** dengan yang baru.  
-> Jika `hashtags` dikirim, **semua hashtag lama akan diganti** dengan yang baru.  
-> Hanya **pemilik post** yang bisa melakukan update.
+Rules
+
+* Semua field opsional
+* Jika `media` dikirim:
+
+  * semua media lama dihapus
+  * diganti media baru
+* Jika `hashtags` dikirim:
+
+  * semua hashtag lama dihapus
+  * diganti hashtag baru
+* Hanya pemilik post yang bisa update
 
 Response `200`
 
 ```json
 {
   "message": "Success",
+
   "data": {
     "id": 1,
-    "content": "Updated content",
-    "authorId": 3,
-    "author": {
-      "id": 3,
-      "name": "John Doe",
-      "username": "john",
-      "avatar": null
-    },
-    "media": [
-      {
-        "id": 2,
-        "url": "https://example.com/new-image.jpg",
-        "type": "IMAGE",
-        "postId": 1,
-        "createdAt": "2026-01-01T02:00:00.000Z"
-      }
-    ],
-    "hashtags": [
-      {
-        "id": 2,
-        "postId": 1,
-        "hashtagId": 2,
-        "hashtag": {
-          "id": 2,
-          "name": "updated",
-          "createdAt": "2026-01-01T00:00:00.000Z"
-        }
-      }
-    ],
-    "_count": {
-      "likes": 5,
-      "comments": 1
-    },
-    "createdAt": "2026-01-01T00:00:00.000Z",
-    "updatedAt": "2026-01-01T02:00:00.000Z"
+    "content": "Updated content"
   }
 }
 ```
@@ -777,7 +1003,7 @@ Error Response — bukan pemilik
 }
 ```
 
-Error Response — tidak ditemukan
+Error Response — post tidak ditemukan
 
 ```json
 {
@@ -789,31 +1015,31 @@ Error Response — tidak ditemukan
 
 ### Delete Post
 
-```
+```http
 DELETE /posts/:id
 ```
 
 Headers
 
-```
+```txt
 Authorization: Bearer <access_token>
 ```
 
-> Hanya **pemilik post** yang bisa menghapus.  
-> Menghapus post akan otomatis menghapus `media`, `comments`, `likes`, dan relasi `hashtags` (cascade).
+Rules
+
+* Hanya pemilik post yang bisa delete
 
 Response `200`
 
 ```json
 {
   "message": "Post #1 deleted successfully",
+
   "data": {
     "message": "Post #1 deleted successfully"
   }
 }
 ```
-
-> **Bug**: Field `data` berisi duplikat message karena interceptor mem-fallback ke seluruh object return service. Untuk fix, ubah return `remove()` di service menjadi `{ message: "...", data: null }`.
 
 Error Response — bukan pemilik
 
@@ -823,7 +1049,7 @@ Error Response — bukan pemilik
 }
 ```
 
-Error Response — tidak ditemukan
+Error Response — post tidak ditemukan
 
 ```json
 {
@@ -832,6 +1058,70 @@ Error Response — tidak ditemukan
 ```
 
 ---
+
+### Infinite Scroll Flow
+
+#### Cara Kerja Cursor Pagination
+
+Request pertama
+
+```http
+GET /posts/fyp?limit=10
+```
+
+Response
+
+```json
+{
+  "meta": {
+    "nextCursor": 15,
+    "hasMore": true
+  }
+}
+```
+
+Request berikutnya
+
+```http
+GET /posts/fyp?cursor=15&limit=10
+```
+
+Flow
+
+```txt
+Frontend request
+→ Backend ambil 10 post
+→ Backend kirim nextCursor
+→ Frontend simpan nextCursor
+→ Saat user scroll bawah:
+   request lagi pakai cursor sebelumnya
+→ Ulang sampai hasMore = false
+```
+
+---
+
+### Notes
+
+* Semua feed menggunakan cursor pagination
+* Cocok untuk infinite scroll
+* Lebih efisien dibanding page pagination
+* Feed otomatis filter:
+
+  * `isDeleted = false`
+  * `isShadowBanned = false`
+* Feed hanya mengambil 2 komentar terbaru agar query lebih ringan
+* Detail post mengambil 20 komentar terbaru
+* `viewCount` otomatis bertambah saat detail post dibuka
+* Hashtag otomatis lowercase
+* Update `media` dan `hashtags` bersifat replace, bukan append
+* Sorting FYP menggunakan:
+
+  * `finalScore`
+  * `createdAt`
+* Sorting trending menggunakan:
+
+  * `viewCount`
+  * `likeCount`
 
 ## Follows
 
